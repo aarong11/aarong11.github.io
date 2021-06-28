@@ -1,148 +1,152 @@
 <html>
-   <head>
-      <link rel="stylesheet" href="./css/style.css">
-      <script src="./js/jquery.js" type='text/javascript'></script>
-      <script src="./js/typed.js" type='text/javascript'></script>
-      <script src="./js/common.js" type='text/javascript'></script>
-      <script>
-         var windowMessages = [];
 
-         var isKeyboardUnlocked = false;
+<head>
+   <link rel="stylesheet" href="./css/style.css">
+   <script src="./js/jquery.js" type='text/javascript'></script>
+   <script src="./js/typed.js" type='text/javascript'></script>
+   <script src="./js/common.js" type='text/javascript'></script>
+   <script>
+      var windowMessages = [];
 
-         function gameEventFired(e) {
+      var isKeyboardUnlocked = false;
 
-            addWindowMessage({
-               "type": "playSound",
-               "sound": "button_click"
-            });
-         }
+      function gameEventFired(e) {
 
-         function simulateKeyPress(key) {
-            if (key.length == 1) {
-               document.getElementById('prompt').innerHTML += key.toLowerCase();
-            }
-         }
-
-
-         $(function () {
-            var data = [
-               {
-                  "action": "type",
-                  "strings": [
-                     "The room to your right contains three figures."
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-1"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "One of them is a large adult gorilla named Harambe"
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-2"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "The second is a baby Adolf Hitler"
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-3"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "The third, a baby Jesus"
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-4"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "Above them looms a large X53 class space shuttle"
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-5"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "It's destination is Sol. It has space for one passenger."
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-6"
-                  }
-               },
-               {
-                  "action": "type",
-                  "strings": [
-                     "Who will you send? You have 30 seconds to decide."
-                  ],
-                  "output": "&nbsp;",
-                  "postDelay": 0,
-                  "script": {
-                     "type": "playSound",
-                     "sound": "level-1-intro-7"
-                  }
-               },
-               {
-                  "action": "setanswerbuttontext",
-                  "data": ["a", "b", "c", "d"]
-               },
-               {
-                  "action": "unlock"
-               }
-            ]
-            runScripts(data, 0);
+         addWindowMessage({
+            "type": "playSound",
+            "sound": "button_click"
          });
+      }
 
-      </script>
+      function simulateKeyPress(key) {
+         if (key.length == 1) {
+            document.getElementById('prompt').innerHTML += key.toLowerCase();
+         }
+      }
 
-   </head>
 
-   <body class="crt"></body>
-   <div class="emblem"><span class="icon-information"></span></div>
-   <div class="frame">
-      <div class="piece output">
-         <h1>ETHICS++</h1>
-         <div class="terminal-window">
-            <section class="terminal">
-               <div class="history"></div>
-               &nbsp;<span class="prompt" id="prompt"></span>
-               <span class="typed-cursor"></span>
+      $(function () {
+         var data = [
+            {
+               "action": "unlockui"
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "The room to your right contains three figures."
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-1"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "One of them is a large adult gorilla named Harambe"
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-2"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "The second is a baby Adolf Hitler"
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-3"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "The third, a baby Jesus"
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-4"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "Above them looms a large X53 class space shuttle"
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-5"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "It's destination is Sol. It has space for one passenger."
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-6"
+               }
+            },
+            {
+               "action": "type",
+               "strings": [
+                  "Who will you send? You have 30 seconds to decide."
+               ],
+               "output": "&nbsp;",
+               "postDelay": 0,
+               "script": {
+                  "type": "playSound",
+                  "sound": "level-1-intro-7"
+               }
+            },
+            {
+               "action": "setanswerbuttontext",
+               "data": ["a", "b", "c", "d"]
+            },
+            {
+               "action": "unlock"
+            }
+         ]
+         runScripts(data, 0);
+      });
 
-            </section>
-         </div>
-         <!-- data -->
-         <div class="terminal-data mimik-run-output">
-         </div>
+   </script>
 
+</head>
+
+<body class="crt"></body>
+<div class="emblem"><span class="icon-information"></span></div>
+<div class="frame">
+   <div class="piece output">
+      <h1>ETHICS++</h1>
+      <div class="terminal-window">
+         <section class="terminal">
+            <div class="history"></div>
+            &nbsp;<span class="prompt" id="prompt"></span>
+            <span class="typed-cursor"></span>
+
+         </section>
       </div>
+      <!-- data -->
+      <div class="terminal-data mimik-run-output">
+      </div>
+
    </div>
+</div>
 
 </html>
