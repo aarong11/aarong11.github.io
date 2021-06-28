@@ -17,9 +17,8 @@
 
     function simulateKeyPress(key) {
       if (isKeyboardUnlocked) {
-
+        window.location.href = "./ethics2.html"
       }
-      window.location.href = "./ethics2.html"
     }
 
     $(function () {
@@ -62,27 +61,27 @@
       ]
       runScripts(data, 0);
     });
-    
+
   </script>
 </head>
 
 <body class="crt">
-<div class="emblem"><span class="icon-information"></span></div>
-<div class="frame">
-  <div class="piece output">
-    <h1>ETHICS++</h1>
-    <div class="terminal-window">
-      <section class="terminal">
-        <div class="history"></div>
-        &nbsp;<span class="prompt" id="prompt"></span>
-        <span class="typed-cursor"></span>
-      </section>
-    </div>
-    <!-- data -->
-    <div class="terminal-data mimik-run-output">
+  <div class="emblem"><span class="icon-information"></span></div>
+  <div class="frame">
+    <div class="piece output">
+      <h1>ETHICS++</h1>
+      <div class="terminal-window">
+        <section class="terminal">
+          <div class="history"></div>
+          &nbsp;<span class="prompt" id="prompt"></span>
+          <span class="typed-cursor"></span>
+        </section>
+      </div>
+      <!-- data -->
+      <div class="terminal-data mimik-run-output">
+      </div>
     </div>
   </div>
-</div>
 </body>
 
 </html>
