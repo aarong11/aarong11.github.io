@@ -6,6 +6,21 @@ function runScripts(data, pos) {
                 $('.history').html('');
         }
         switch (script.action) {
+                case 'unlock':
+                        var json = {
+                                type: "unlock",
+                                data: "",
+                                sound: ""
+                        };
+                        addWindowMessage(json);
+                        break;
+                case 'lock': 
+                        var json = {
+                                type: "lock",
+                                data: "",
+                                sound: ""
+                        };
+                        break;
                 case 'type':
                         // cleanup for next execution
                         prompt.removeData();
