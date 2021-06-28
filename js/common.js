@@ -1,4 +1,3 @@
-
 function runScripts(data, pos) {
         var prompt = $('.prompt'),
                 script = data[pos];
@@ -6,7 +5,7 @@ function runScripts(data, pos) {
                 $('.history').html('');
         }
         switch (script.action) {
-                case 'unlock':
+                case 'unlockui':
                         var json = {
                                 type: "unlock",
                                 data: "",
@@ -14,12 +13,21 @@ function runScripts(data, pos) {
                         };
                         addWindowMessage(json);
                         break;
-                case 'lock': 
+                case 'lockui': 
                         var json = {
                                 type: "lock",
                                 data: "",
                                 sound: ""
                         };
+                        addWindowMessage(json);
+                        break;
+                case 'setanswerbuttontext':
+                        var json = {
+                                type: "setanswerbuttontext",
+                                data: script.data
+                        }
+                        addWindowMessage(json);
+                        console.log(json);
                         break;
                 case 'type':
                         // cleanup for next execution
