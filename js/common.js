@@ -77,7 +77,6 @@ function runScripts(data, pos) {
                         });
                         break;
                 case 'unlock':
-                        console.log("test");
                         isKeyboardUnlocked = true;
                         break;
                 case 'done':
