@@ -1,3 +1,5 @@
+var isTyping = false;
+
 function runScripts(data, pos) {
         var prompt = $('.prompt'),
                 script = data[pos];
@@ -21,6 +23,18 @@ function runScripts(data, pos) {
                         };
                         addWindowMessage(json);
                         break;
+                case 'setgamestatevalues':
+                        try {
+                                var json = {
+                                        type: "setgamestatevalues",
+                                        data: script.data
+                                }
+                                addWindowMessage(json);
+                                console.log(json);
+                        } catch(ex) {
+                                console.log(ex);
+                        }
+                        break;
                 case 'setanswerbuttontext':
                         var json = {
                                 type: "setanswerbuttontext",
@@ -36,6 +50,7 @@ function runScripts(data, pos) {
                         if (script.script) {
                                 addWindowMessage(script.script);
                         }
+                        isTyping = true;
                         prompt.typed({
                                 strings: script.strings,
                                 typeSpeed: 30,
@@ -51,9 +66,10 @@ function runScripts(data, pos) {
                                         // scroll to bottom of screen
                                         $('section.terminal').scrollTop($('section.terminal').height());
                                         // Run next script
-                                        pos++;
                                         if (pos < data.length) {
                                                 setTimeout(function () {
+                                                        pos++;
+                                                        isTyping = false;
                                                         runScripts(data, pos);
                                                 }, script.postDelay || 1000);
                                         }
@@ -65,10 +81,14 @@ function runScripts(data, pos) {
                         isKeyboardUnlocked = true;
                         break;
                 case 'done':
-                        return;
-                case 'view':
-
                         break;
+                case 'view':
+                        break;
+        }
+
+        if(script.action != "typing" && !isTyping) {
+                pos++;
+                runScripts(data, pos);
         }
 }
 
