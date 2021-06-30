@@ -24,7 +24,7 @@ function runScripts(data, pos) {
                 case 'setanswerbuttontext':
                         var json = {
                                 type: "setanswerbuttontext",
-                                data: JSON.stringify(script.data)
+                                data: script.data
                         }
                         addWindowMessage(json);
                         console.log(json);
