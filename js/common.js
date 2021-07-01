@@ -23,6 +23,18 @@ function runScripts(data, pos) {
                         };
                         addWindowMessage(json);
                         break;
+                case 'setachievements':
+                        try {
+                                var json = {
+                                        type: "setachievements",
+                                        data: script.data
+                                }
+                                addWindowMessage(json);
+                                console.log(json);
+                        } catch(ex) {
+                                console.log(ex);
+                        }
+                        break;
                 case 'setgamestatevalues':
                         try {
                                 var json = {
@@ -43,6 +55,7 @@ function runScripts(data, pos) {
                         addWindowMessage(json);
                         console.log(json);
                         break;
+                
                 case 'type':
                         // cleanup for next execution
                         prompt.removeData();
@@ -91,6 +104,19 @@ function runScripts(data, pos) {
         }
 }
 
+function setAchievements(achievements) {
+        try {
+                var json = {
+                        type: "setachievements",
+                        data: achievements
+                }
+                addWindowMessage(json);
+                console.log(json);
+        } catch(ex) {
+                console.log(ex);
+        }
+}
+
 function isUnlocked() {
         return isKeyboardUnlocked;
 }
@@ -103,6 +129,7 @@ function getWindowMessages() {
 function addWindowMessage(message) {
         windowMessages.push(message);
 }
+
 
 function setGameStates(gameStates) {
         var json = {

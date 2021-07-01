@@ -18,6 +18,24 @@
             case GameEventsEnum.CLICK_BUTTON_EVENT:
                lockUI();
                playSound("level-1-rocket");
+               document.getElementById('prompt').innerHTML = JSON.stringify(obj);
+               if(obj.data == "Button1") {
+                  setAchievements([{key:"SPACE_HARAMBE", value:"1"}]);
+                  changeURL("./ethics2-harambe.html")
+                  set
+               }
+               if(obj.data == "Button2") {
+                  changeURL("./ethics2-adolf.html")
+                  set
+               }
+               if(obj.data == "Button3") {
+                  changeURL("./ethics2-jesus.html")
+                  set
+               }
+               if(obj.data == "Button4") {
+                  changeURL("./ethics2-donothing.html")
+                  set
+               }
                break;
          }
       }

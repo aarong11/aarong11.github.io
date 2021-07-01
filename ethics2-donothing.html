@@ -1,0 +1,94 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/jquery.js"></script>
+  <script src="./js/typed.js"></script>
+  <script src="./js/common.js"></script>
+  <script>
+
+    var isKeyboardUnlocked = false;
+    var windowMessages = [];
+
+    document.addEventListener('keydown', function (event) {
+      simulateKeyPress(event);
+    });
+
+
+    function simulateKeyPress(key) {
+      if (isKeyboardUnlocked) {
+        window.location.href = "./ethics3.html"
+      }
+    }
+
+    $(function () {
+      var data = [
+        {
+          "action": "lock"
+        },
+        {
+          "action": "type",
+          "strings": [
+            "You do nothing, leaving baby Hitler, Jesus and Harambe in the room together."
+          ],
+          "output": "&nbsp;",
+          "postDelay": 0,
+          "script": {
+            "type": "playSound",
+            "sound": "level1-nothing-1"
+          }
+        },
+        {
+          "action": "type",
+          "script": {
+            "type": "playSound",
+            "sound": "level1-nothing-2"
+          },
+          "strings": [
+            "You hear the sound of a tea party, where Harambe pledges to raise the infants as his own."
+          ],
+          "output": "&nbsp;",
+          "postDelay": 0
+        },
+        {
+          "action": "type",
+          "script": {
+            "type": "playSound",
+            "sound": "level1-nothing-3"
+          },
+          "strings": [
+            "The infants grow up, and with Harambe's moral guidance become well balanced and rounded individuals. "
+          ],
+          "output": "<br/>Christianity reputation:+1<br/>Right wing reputation: -1000<br/>Animal rights reputation: +1<br/><br/><span class=\"gray\">Press any key to continue...</span>",
+          "postDelay": 0
+        },
+        {
+          "action": "unlock"
+        }
+      ]
+      runScripts(data, 0);
+    });
+
+  </script>
+</head>
+
+<body class="crt">
+  <div class="emblem"><span class="icon-information"></span></div>
+  <div class="frame">
+    <div class="piece output">
+      <h1>ETHICS++</h1>
+      <div class="terminal-window">
+        <section class="terminal">
+          <div class="history"></div>
+          &nbsp;<span class="prompt" id="prompt"></span>
+          <span class="typed-cursor"></span>
+        </section>
+      </div>
+      <!-- data -->
+      <div class="terminal-data mimik-run-output">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
