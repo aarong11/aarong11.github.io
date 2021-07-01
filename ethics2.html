@@ -12,15 +12,23 @@
 
       function gameEventFired(e) {
 
-         addWindowMessage({
-            "type": "playSound",
-            "sound": "button_click"
-         });
+         var obj = JSON.parse(e);
+
+         switch(obj.type) {
+            case GameEventsEnum.CLICK_BUTTON_EVENT:
+               lockUI();
+               playSound("level-1-rocket");
+               break;
+         }
       }
 
       function simulateKeyPress(key) {
          if (key.length == 1) {
             document.getElementById('prompt').innerHTML += key.toLowerCase();
+         } else {
+            console.log(key);
+            // Special key
+            //document.getElementById('prompt').innerHTML += key.toLowerCase();
          }
       }
 

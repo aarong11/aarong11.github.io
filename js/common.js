@@ -3,7 +3,7 @@ var isTyping = false;
 function runScripts(data, pos) {
         var prompt = $('.prompt'),
                 script = data[pos];
-        if (script.clear === true) {
+        if (script && script.clear === true) {
                 $('.history').html('');
         }
         switch (script.action) {
@@ -85,7 +85,7 @@ function runScripts(data, pos) {
                         break;
         }
 
-        if(script.action != "typing" && !isTyping) {
+        if(script.action != "typing" && !isTyping && pos < data.length) {
                 pos++;
                 runScripts(data, pos);
         }
@@ -104,15 +104,40 @@ function addWindowMessage(message) {
         windowMessages.push(message);
 }
 
+function setGameStates(gameStates) {
+        var json = {
+                type: "setgamestatevalues",
+                data: gameStates
+        }
 
-
-const GameEventsEnum = Object.freeze({ "ClickButtonEvent": 1 })
-
-function gameEventFired(e) {
-
-        addWindowMessage({
-                "type": "playSound",
-                "sound": "button_click"
-        });
+        addWindowMessage(json);
 }
+
+function lockUI() {
+        var json = {
+                type: "lock",
+                data: "",
+                sound: ""
+        };
+        addWindowMessage(json);
+}
+
+function playSound(sound) {
+        
+        var json = {
+                type: "playSound",
+                data: "",
+                sound: sound
+        };
+
+        addWindowMessage(json);
+}
+
+function changeURL(url) {
+        window.location.href = url;
+}
+
+
+
+const GameEventsEnum = Object.freeze({ CLICK_BUTTON_EVENT: 1 })
 
