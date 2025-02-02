@@ -1,0 +1,28 @@
+/* src/styles/global.css */
+@import './tailwind.css';
+
+body {
+  background-color: #111; /* Dark background */
+  color: #eee;
+}
+
+.app-container {
+  background-color: #222; /* Slightly lighter background */
+  color: white;
+}
+
+button {
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  filter: brightness(1.2);
+}
+
+/* Add this for resizable containers */
+.resizable {
+  resize: both;
+  overflow: auto;
+  min-width: 200px;
+  min-height: 100px;
+}
