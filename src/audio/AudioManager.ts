@@ -1,8 +1,8 @@
 // src/audio/AudioManager.ts
 import { BaseInstrument } from './instruments/BaseInstrument';
-import { MyCustomInstrument } from './instruments/implementation/MyCustomInstrument';
-import { MyGuitarInstrument } from './instruments/implementation/MyGuitarInstrument';
-import { MyPianoInstrument } from './instruments/implementation/MyPianoInstrument';
+import { SineInstrument } from './instruments/implementation/SineInstrument';
+import { SawInstrument } from './instruments/implementation/SawInstrument';
+import { SamplerInstrument } from './instruments/implementation/SamplerInstrument';
 
 export class AudioManager {
   private static instance: AudioManager;
@@ -10,6 +10,9 @@ export class AudioManager {
   private instruments: Map<string, BaseInstrument>;
   private analyser: AnalyserNode;
   private masterGain: GainNode;
+
+  // Static registry for instrument constructors.
+  private static registry = new Map<string, new () => BaseInstrument>();
 
   private constructor() {
     this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -27,6 +30,17 @@ export class AudioManager {
       AudioManager.instance.initializeDefaultInstruments();
     }
     return AudioManager.instance;
+  }
+
+  // Method to register an instrument.
+  public static registerInstrument(key: string, ctor: new () => BaseInstrument) {
+    AudioManager.registry.set(key, ctor);
+  }
+
+  // Factory method.
+  public static createInstrument(key: string): BaseInstrument | undefined {
+    const InstrumentCtor = AudioManager.registry.get(key);
+    return InstrumentCtor ? new InstrumentCtor() : undefined;
   }
 
   public addInstrument(name: string, instrument: BaseInstrument) {
@@ -72,16 +86,19 @@ export class AudioManager {
   }
 
   public initializeDefaultInstruments() {
-    const piano = BaseInstrument.createInstrument('piano');
-    const guitar = BaseInstrument.createInstrument('guitar');
-    const custom = BaseInstrument.createInstrument('custom');
-    this.addInstrument('piano', new MyPianoInstrument());
-    this.addInstrument('guitar', new MyGuitarInstrument());
-    this.addInstrument('custom', new MyCustomInstrument());
+    this.addInstrument('sampler', new SamplerInstrument());
+    this.addInstrument('sine', new SineInstrument());
+    this.addInstrument('saw', new SawInstrument());
   }
 
   public getInstrumentNames(): string[] {
     return Array.from(this.instruments.keys());
+  }
+
+  public createOscillator(frequency: number, audioContext: AudioContext): OscillatorNode {
+    const oscillator = audioContext.createOscillator();
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+    return oscillator;
   }
 }
 
