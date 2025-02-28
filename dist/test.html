@@ -43,6 +43,158 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/CSS2DRenderer.js"></script>
   <script>
+    /**
+ * @author mrdoob / http://mrdoob.com/
+ */
+
+THREE.CSS2DObject = function ( element ) {
+
+THREE.Object3D.call( this );
+
+this.element = element || document.createElement( 'div' );
+this.element.style.position = 'absolute';
+this.element.style.userSelect = 'none';
+
+this.addEventListener( 'removed', function () {
+    this.traverse( function ( object ) {
+        if ( object.element instanceof Element && object.element.parentNode !== null ) {
+            object.element.parentNode.removeChild( object.element );
+        }
+    } );
+} );
+};
+
+THREE.CSS2DObject.prototype = Object.create( THREE.Object3D.prototype );
+THREE.CSS2DObject.prototype.constructor = THREE.CSS2DObject;
+
+THREE.CSS2DRenderer = function () {
+
+var _this = this;
+
+var _width, _height;
+var _widthHalf, _heightHalf;
+
+var vector = new THREE.Vector3();
+var viewMatrix = new THREE.Matrix4();
+var viewProjectionMatrix = new THREE.Matrix4();
+
+var cache = {
+    objects: new WeakMap()
+};
+
+var domElement = document.createElement( 'div' );
+domElement.style.overflow = 'hidden';
+
+this.domElement = domElement;
+
+this.getSize = function () {
+    return {
+        width: _width,
+        height: _height
+    };
+};
+
+this.setSize = function ( width, height ) {
+    _width = width;
+    _height = height;
+
+    _widthHalf = _width / 2;
+    _heightHalf = _height / 2;
+
+    domElement.style.width = width + 'px';
+    domElement.style.height = height + 'px';
+};
+
+this.render = function ( scene, camera ) {
+    if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
+    if ( camera.parent === null ) camera.updateMatrixWorld();
+
+    viewMatrix.copy( camera.matrixWorldInverse );
+    viewProjectionMatrix.multiplyMatrices( camera.projectionMatrix, viewMatrix );
+
+    renderObject( scene, scene, camera );
+    zOrder( scene );
+};
+
+function renderObject( object, scene, camera ) {
+    if ( object instanceof THREE.CSS2DObject ) {
+        object.onBeforeRender( _this, scene, camera );
+
+        vector.setFromMatrixPosition( object.matrixWorld );
+        vector.applyMatrix4( viewProjectionMatrix );
+
+        var element = object.element;
+        var cachedObject = cache.objects.get( object );
+
+        if ( cachedObject === undefined || cachedObject.element !== element ) {
+            if ( element.parentNode !== domElement ) {
+                domElement.appendChild( element );
+            }
+
+            cache.objects.set( object, { element: element, distanceToCameraSquared: 0 } );
+
+            element.style.WebkitTransform = getObjectCSSTransform( vector );
+            element.style.MozTransform = getObjectCSSTransform( vector );
+            element.style.transform = getObjectCSSTransform( vector );
+        } else {
+            cachedObject.distanceToCameraSquared = getDistanceToSquared( camera, object );
+        }
+
+        var style = element.style;
+
+        style.display = ( object.visible && vector.z >= - 1 && vector.z <= 1 ) ? '' : 'none';
+
+        object.onAfterRender( _this, scene, camera );
+    }
+
+    for ( var i = 0, l = object.children.length; i < l; i ++ ) {
+        renderObject( object.children[ i ], scene, camera );
+    }
+}
+
+function getObjectCSSTransform( vector ) {
+    var x = ( vector.x * _widthHalf ) + _widthHalf;
+    var y = - ( vector.y * _heightHalf ) + _heightHalf;
+    return 'translate(-50%,-50%) translate(' + x + 'px,' + y + 'px)';
+}
+
+function zOrder( scene ) {
+    var sorted = [];
+
+    scene.traverse( function ( object ) {
+        if ( object instanceof THREE.CSS2DObject ) {
+            var cachedObject = cache.objects.get( object );
+
+            if ( cachedObject !== undefined ) {
+                sorted.push( {
+                    object: object,
+                    element: cachedObject.element,
+                    distanceToCameraSquared: cachedObject.distanceToCameraSquared
+                } );
+            }
+        }
+    } );
+
+    sorted.sort( function ( a, b ) {
+        return b.distanceToCameraSquared - a.distanceToCameraSquared;
+    } );
+
+    for ( var i = 0, l = sorted.length; i < l; i ++ ) {
+        sorted[ i ].element.style.zIndex = l - i;
+    }
+}
+
+function getDistanceToSquared( object1, object2 ) {
+    var v1 = new THREE.Vector3();
+    var v2 = new THREE.Vector3();
+
+    v1.setFromMatrixPosition( object1.matrixWorld );
+    v2.setFromMatrixPosition( object2.matrixWorld );
+
+    return v1.distanceToSquared( v2 );
+}
+};
+
     // Set up scene, camera, and renderers
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
