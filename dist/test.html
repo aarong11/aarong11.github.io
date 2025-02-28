@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Earth with Orbiting Cats and Radar</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    /* Radar style */
+    #radar {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 200px;
+      height: 200px;
+      border: 2px solid lime;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+    .radar-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: red;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    /* Label style for cats */
+    .label {
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 12px;
+      text-shadow: 0 0 5px #000;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Radar display -->
+  <div id="radar"></div>
+
+  <!-- Three.js and CSS2DRenderer libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/CSS2DRenderer.js"></script>
+  <script>
+    // Set up scene, camera, and renderers
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 10, 20);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // CSS2DRenderer for labels
+    var labelRenderer = new THREE.CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    labelRenderer.domElement.style.pointerEvents = 'none';
+    document.body.appendChild(labelRenderer.domElement);
+
+    // Add basic lighting
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+
+    // Create the Earth
+    var earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+    var earthTexture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
+    var earthMaterial = new THREE.MeshPhongMaterial({ map: earthTexture });
+    var earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
+    scene.add(earthMesh);
+
+    // Create orbiting cats
+    var cats = [];
+    var numCats = 5;
+    var catOrbitRadius = 8;
+    // Using a cute kitten image as the texture
+    var catTexture = new THREE.TextureLoader().load('https://placekitten.com/64/64');
+
+    for (var i = 0; i < numCats; i++) {
+      // Create a sprite for the cat
+      var spriteMaterial = new THREE.SpriteMaterial({ map: catTexture });
+      var sprite = new THREE.Sprite(spriteMaterial);
+      sprite.scale.set(1, 1, 1);
+      // Distribute cats evenly along the orbit
+      var angle = (i / numCats) * Math.PI * 2;
+      sprite.position.set(catOrbitRadius * Math.cos(angle), 0, catOrbitRadius * Math.sin(angle));
+      scene.add(sprite);
+
+      // Add a CSS2D label for the cat
+      var div = document.createElement('div');
+      div.className = 'label';
+      div.textContent = 'Cat ' + (i + 1);
+      var label = new THREE.CSS2DObject(div);
+      label.position.set(0, 1, 0);
+      sprite.add(label);
+
+      // Store cat data (including a random speed for orbiting)
+      cats.push({ sprite: sprite, angle: angle, speed: 0.01 + Math.random() * 0.02 });
+    }
+
+    // Set up the radar dots
+    var radar = document.getElementById('radar');
+    cats.forEach(function(cat, index) {
+      var dot = document.createElement('div');
+      dot.className = 'radar-dot';
+      dot.id = 'cat-dot-' + index;
+      radar.appendChild(dot);
+      cat.dot = dot;
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Slowly rotate the Earth
+      earthMesh.rotation.y += 0.001;
+
+      // Update each cat's orbit position
+      cats.forEach(function(cat) {
+        cat.angle += cat.speed;
+        cat.sprite.position.set(catOrbitRadius * Math.cos(cat.angle), 0, catOrbitRadius * Math.sin(cat.angle));
+      });
+
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
+      updateRadar();
+    }
+
+    // Update the radar display to track each cat's position
+    function updateRadar() {
+      // Radar dimensions and center
+      var radarSize = radar.clientWidth;
+      var center = radarSize / 2;
+      // Scale: map the orbit radius to 80% of the radar's radius
+      var scale = (center * 0.8) / catOrbitRadius;
+
+      cats.forEach(function(cat) {
+        // Use the X and Z positions (Y is up)
+        var x = cat.sprite.position.x * scale;
+        var z = cat.sprite.position.z * scale;
+        // Position dot relative to the center of the radar (invert z for top-down view)
+        cat.dot.style.left = (center + x) + 'px';
+        cat.dot.style.top = (center - z) + 'px';
+      });
+    }
+
+    animate();
+
+    // Adjust for window resize events
+    window.addEventListener('resize', function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
